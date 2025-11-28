@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Trash2 } from 'lucide-react';
+import { Trash2, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Investment, calculateROI, getVerdict, verdictConfig, trendConfig } from '@/types/investment';
 
@@ -15,13 +15,28 @@ export const InvestmentCard = ({ investment, onDelete, index }: InvestmentCardPr
   const verdictInfo = verdictConfig[verdict];
   const trendInfo = trendConfig[investment.market_trend];
 
+  // AI Verdict recommendation based on verdict type
+  const getAIRecommendation = () => {
+    switch (verdict) {
+      case 'unicorn':
+        return { text: 'Strong Buy Signal. Scale aggressively.', colorClass: 'text-neon-purple' };
+      case 'killer':
+        return { text: 'Critical Warning. Liquidate assets.', colorClass: 'text-neon-red' };
+      default:
+        return { text: 'Hold position and monitor.', colorClass: 'text-muted-foreground' };
+    }
+  };
+
+  const aiRecommendation = getAIRecommendation();
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.95 }}
       transition={{ delay: index * 0.05 }}
-      className="glass-card p-5 hover:border-white/20 transition-all group"
+      whileHover={{ scale: 1.02 }}
+      className="glass-card p-5 hover:border-white/30 hover:shadow-[0_0_30px_rgba(124,58,237,0.15)] transition-all duration-300 group"
     >
       {/* Header */}
       <div className="flex items-start justify-between mb-4">
@@ -84,6 +99,15 @@ export const InvestmentCard = ({ investment, onDelete, index }: InvestmentCardPr
         >
           <Trash2 className="w-4 h-4" />
         </Button>
+      </div>
+
+      {/* AI Verdict Footer */}
+      <div className="mt-4 pt-3 border-t border-white/10 flex items-center gap-2">
+        <Sparkles className="w-4 h-4 text-neon-purple" />
+        <span className="text-xs text-muted-foreground">AI Verdict:</span>
+        <span className={`text-xs font-medium ${aiRecommendation.colorClass}`}>
+          {aiRecommendation.text}
+        </span>
       </div>
     </motion.div>
   );
