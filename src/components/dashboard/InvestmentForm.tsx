@@ -12,7 +12,7 @@ interface InvestmentFormProps {
   onSubmit: (data: InvestmentFormData) => Promise<{ error: Error | null }>;
 }
 
-const categories: Category[] = ['AI & Tech', 'Crypto', 'Real Estate', 'E-commerce', 'Stocks'];
+const categories: Category[] = ['AI & Tech', 'Crypto', 'Real Estate', 'Retail', 'Stocks'];
 
 export const InvestmentForm = ({ onSubmit }: InvestmentFormProps) => {
   const [formData, setFormData] = useState<InvestmentFormData>({
@@ -49,54 +49,54 @@ export const InvestmentForm = ({ onSubmit }: InvestmentFormProps) => {
     <motion.div
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
-      className="glass-card p-6"
+      className="cyber-glass p-6 rounded-xl"
     >
-      <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-        <Plus className="w-5 h-5 text-primary" />
-        Add New Investment
+      <h3 className="text-lg font-command mb-4 flex items-center gap-2">
+        <Plus className="w-5 h-5 text-cyber-violet" />
+        INITIALIZE INVESTMENT
       </h3>
 
       <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="space-y-4">
           {/* Project Name */}
           <div className="space-y-2">
-            <Label htmlFor="project_name">Project Name</Label>
+            <Label htmlFor="project_name" className="font-data text-xs uppercase tracking-wide">Project Name</Label>
             <Input
               id="project_name"
               placeholder="e.g., Tesla Shares"
               value={formData.project_name}
               onChange={(e) => setFormData({ ...formData, project_name: e.target.value })}
-              className="bg-secondary/50 border-white/10"
+              className="bg-secondary/50 border-white/10 font-data"
               required
             />
           </div>
 
           {/* Category */}
           <div className="space-y-2">
-            <Label>Category</Label>
+            <Label className="font-data text-xs uppercase tracking-wide">Category</Label>
             <Select
               value={formData.category}
               onValueChange={(value) => setFormData({ ...formData, category: value as Category })}
             >
-              <SelectTrigger className="bg-secondary/50 border-white/10">
+              <SelectTrigger className="bg-secondary/50 border-white/10 font-data">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
                 {categories.map((cat) => (
-                  <SelectItem key={cat} value={cat}>
+                  <SelectItem key={cat} value={cat} className="font-data">
                     {cat}
                   </SelectItem>
                 ))}
               </SelectContent>
             </Select>
-            <p className="text-xs text-muted-foreground">
+            <p className="text-xs text-muted-foreground font-data">
               Auto-trend: <span className={trendInfo.color}>{trendInfo.emoji} {currentTrend}</span>
             </p>
           </div>
 
           {/* Cost */}
           <div className="space-y-2">
-            <Label htmlFor="cost">Investment Cost ($)</Label>
+            <Label htmlFor="cost" className="font-data text-xs uppercase tracking-wide">Investment Cost ($)</Label>
             <div className="relative">
               <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <Input
@@ -106,7 +106,7 @@ export const InvestmentForm = ({ onSubmit }: InvestmentFormProps) => {
                 placeholder="10000"
                 value={formData.cost || ''}
                 onChange={(e) => setFormData({ ...formData, cost: Number(e.target.value) })}
-                className="pl-10 bg-secondary/50 border-white/10"
+                className="pl-10 bg-secondary/50 border-white/10 font-data"
                 required
               />
             </div>
@@ -114,7 +114,7 @@ export const InvestmentForm = ({ onSubmit }: InvestmentFormProps) => {
 
           {/* Revenue */}
           <div className="space-y-2">
-            <Label htmlFor="revenue">Expected Revenue ($)</Label>
+            <Label htmlFor="revenue" className="font-data text-xs uppercase tracking-wide">Expected Revenue ($)</Label>
             <div className="relative">
               <DollarSign className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <Input
@@ -124,7 +124,7 @@ export const InvestmentForm = ({ onSubmit }: InvestmentFormProps) => {
                 placeholder="25000"
                 value={formData.revenue || ''}
                 onChange={(e) => setFormData({ ...formData, revenue: Number(e.target.value) })}
-                className="pl-10 bg-secondary/50 border-white/10"
+                className="pl-10 bg-secondary/50 border-white/10 font-data"
                 required
               />
             </div>
@@ -134,10 +134,10 @@ export const InvestmentForm = ({ onSubmit }: InvestmentFormProps) => {
         {/* Risk Slider */}
         <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <Label>Risk Score</Label>
-            <span className={`text-sm font-medium ${
-              formData.risk_score > 70 ? 'text-neon-red' : 
-              formData.risk_score > 40 ? 'text-neon-amber' : 'text-neon-green'
+            <Label className="font-data text-xs uppercase tracking-wide">Risk Score</Label>
+            <span className={`text-sm font-bold font-data ${
+              formData.risk_score > 70 ? 'text-cyber-red' : 
+              formData.risk_score > 40 ? 'text-cyber-violet' : 'text-cyber-lime'
             }`}>
               <Percent className="inline w-3 h-3 mr-1" />
               {formData.risk_score}%
@@ -150,7 +150,7 @@ export const InvestmentForm = ({ onSubmit }: InvestmentFormProps) => {
             step={1}
             className="py-2"
           />
-          <div className="flex justify-between text-xs text-muted-foreground">
+          <div className="flex justify-between text-xs text-muted-foreground font-data">
             <span>Low Risk</span>
             <span>High Risk</span>
           </div>
@@ -158,10 +158,10 @@ export const InvestmentForm = ({ onSubmit }: InvestmentFormProps) => {
 
         <Button
           type="submit"
-          className="w-full bg-primary hover:bg-primary/90"
+          className="w-full bg-cyber-violet hover:bg-cyber-violet/80 font-command"
           disabled={isSubmitting || !formData.project_name.trim()}
         >
-          {isSubmitting ? 'Adding...' : 'Add Investment'}
+          {isSubmitting ? 'PROCESSING...' : 'DEPLOY INVESTMENT'}
         </Button>
       </form>
     </motion.div>

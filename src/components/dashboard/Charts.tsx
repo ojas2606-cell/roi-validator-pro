@@ -19,18 +19,18 @@ interface ChartsProps {
 }
 
 const CATEGORY_COLORS: Record<Category, string> = {
-  'AI & Tech': '#7c3aed',
+  'AI & Tech': '#8b5cf6',
   'Crypto': '#f59e0b',
   'Real Estate': '#10b981',
-  'E-commerce': '#3b82f6',
+  'Retail': '#3b82f6',
   'Stocks': '#ec4899',
 };
 
 export const Charts = ({ investments }: ChartsProps) => {
   if (investments.length === 0) {
     return (
-      <div className="glass-card p-8 text-center">
-        <p className="text-muted-foreground">Add investments to see analytics</p>
+      <div className="cyber-glass p-8 text-center rounded-xl">
+        <p className="text-muted-foreground font-data">Add investments to see analytics</p>
       </div>
     );
   }
@@ -39,7 +39,7 @@ export const Charts = ({ investments }: ChartsProps) => {
   const roiData = investments.map((inv) => ({
     name: inv.project_name.length > 12 ? inv.project_name.slice(0, 12) + '...' : inv.project_name,
     roi: calculateROI(Number(inv.cost), Number(inv.revenue)),
-    fill: calculateROI(Number(inv.cost), Number(inv.revenue)) >= 0 ? '#10b981' : '#ef4444',
+    fill: calculateROI(Number(inv.cost), Number(inv.revenue)) >= 0 ? '#a3e635' : '#ff4444',
   }));
 
   // Risk vs Reward data
@@ -65,9 +65,9 @@ export const Charts = ({ investments }: ChartsProps) => {
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
       return (
-        <div className="glass-card p-3 text-sm">
-          <p className="font-medium">{label || payload[0].payload.name}</p>
-          <p className="text-muted-foreground">
+        <div className="cyber-glass p-3 text-sm rounded-lg">
+          <p className="font-command">{label || payload[0].payload.name}</p>
+          <p className="text-muted-foreground font-data">
             {payload[0].name === 'roi' && `ROI: ${payload[0].value.toFixed(1)}%`}
             {payload[0].name === 'y' && `Revenue: $${payload[0].value.toLocaleString()}`}
             {payload[0].name === 'value' && `Investment: $${payload[0].value.toLocaleString()}`}
@@ -85,19 +85,19 @@ export const Charts = ({ investments }: ChartsProps) => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 }}
-        className="glass-card p-5"
+        className="cyber-glass p-5 rounded-xl"
       >
-        <h4 className="text-sm font-medium text-muted-foreground mb-4">ROI Distribution</h4>
+        <h4 className="text-sm font-data uppercase tracking-wide text-muted-foreground mb-4">ROI Distribution</h4>
         <div className="h-48">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={roiData} margin={{ top: 5, right: 5, left: -20, bottom: 5 }}>
               <XAxis 
                 dataKey="name" 
-                tick={{ fill: '#888', fontSize: 10 }}
+                tick={{ fill: '#888', fontSize: 10, fontFamily: 'Space Grotesk' }}
                 axisLine={{ stroke: '#333' }}
               />
               <YAxis 
-                tick={{ fill: '#888', fontSize: 10 }}
+                tick={{ fill: '#888', fontSize: 10, fontFamily: 'Space Grotesk' }}
                 axisLine={{ stroke: '#333' }}
                 tickFormatter={(v) => `${v}%`}
               />
@@ -113,28 +113,28 @@ export const Charts = ({ investments }: ChartsProps) => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2 }}
-        className="glass-card p-5"
+        className="cyber-glass p-5 rounded-xl"
       >
-        <h4 className="text-sm font-medium text-muted-foreground mb-4">Risk vs Reward</h4>
+        <h4 className="text-sm font-data uppercase tracking-wide text-muted-foreground mb-4">Risk vs Reward</h4>
         <div className="h-48">
           <ResponsiveContainer width="100%" height="100%">
             <ScatterChart margin={{ top: 5, right: 5, left: -20, bottom: 5 }}>
               <XAxis 
                 dataKey="x" 
                 name="Risk"
-                tick={{ fill: '#888', fontSize: 10 }}
+                tick={{ fill: '#888', fontSize: 10, fontFamily: 'Space Grotesk' }}
                 axisLine={{ stroke: '#333' }}
                 tickFormatter={(v) => `${v}%`}
               />
               <YAxis 
                 dataKey="y" 
                 name="Revenue"
-                tick={{ fill: '#888', fontSize: 10 }}
+                tick={{ fill: '#888', fontSize: 10, fontFamily: 'Space Grotesk' }}
                 axisLine={{ stroke: '#333' }}
                 tickFormatter={(v) => `$${(v / 1000).toFixed(0)}k`}
               />
               <Tooltip content={<CustomTooltip />} />
-              <Scatter data={scatterData} fill="#7c3aed" />
+              <Scatter data={scatterData} fill="#8b5cf6" />
             </ScatterChart>
           </ResponsiveContainer>
         </div>
@@ -145,9 +145,9 @@ export const Charts = ({ investments }: ChartsProps) => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.3 }}
-        className="glass-card p-5"
+        className="cyber-glass p-5 rounded-xl"
       >
-        <h4 className="text-sm font-medium text-muted-foreground mb-4">Portfolio Allocation</h4>
+        <h4 className="text-sm font-data uppercase tracking-wide text-muted-foreground mb-4">Portfolio Allocation</h4>
         <div className="h-48 relative">
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>
@@ -176,7 +176,7 @@ export const Charts = ({ investments }: ChartsProps) => {
                 className="w-2 h-2 rounded-full"
                 style={{ backgroundColor: entry.fill }}
               />
-              <span className="text-xs text-muted-foreground">{entry.name}</span>
+              <span className="text-xs text-muted-foreground font-data">{entry.name}</span>
             </div>
           ))}
         </div>
