@@ -14,9 +14,7 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ['Manrope', 'Inter', 'system-ui', 'sans-serif'],
-        command: ['Syne', 'sans-serif'],
-        data: ['Space Grotesk', 'monospace'],
+        sans: ['Inter', 'system-ui', 'sans-serif'],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -62,12 +60,13 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
-        // Cyber accent colors
-        cyber: {
-          violet: "hsl(var(--electric-violet))",
-          lime: "hsl(var(--neon-lime))",
-          red: "hsl(var(--fluorescent-red))",
-          cyan: "hsl(var(--deep-cyan))",
+        // Neon accent colors
+        neon: {
+          purple: "hsl(var(--neon-purple))",
+          red: "hsl(var(--neon-red))",
+          green: "hsl(var(--neon-green))",
+          amber: "hsl(var(--neon-amber))",
+          cyan: "hsl(var(--neon-cyan))",
         },
       },
       borderRadius: {
@@ -93,12 +92,8 @@ export default {
           "100%": { transform: "scale(1)", opacity: "1" },
         },
         "glow-pulse": {
-          "0%, 100%": { boxShadow: "0 0 30px hsl(258 90% 66% / 0.3)" },
-          "50%": { boxShadow: "0 0 60px hsl(258 90% 66% / 0.5)" },
-        },
-        "pulse-red": {
-          "0%, 100%": { borderColor: "hsl(0 100% 63% / 0.5)" },
-          "50%": { borderColor: "hsl(0 100% 63% / 1)" },
+          "0%, 100%": { boxShadow: "0 0 20px hsl(263 70% 50% / 0.3)" },
+          "50%": { boxShadow: "0 0 40px hsl(263 70% 50% / 0.5)" },
         },
       },
       animation: {
@@ -107,7 +102,6 @@ export default {
         "fade-in": "fade-in 0.5s ease-out",
         "scale-in": "scale-in 0.3s ease-out",
         "glow-pulse": "glow-pulse 2s ease-in-out infinite",
-        "pulse-red": "pulse-red 1.5s ease-in-out infinite",
       },
     },
   },

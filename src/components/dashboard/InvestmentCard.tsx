@@ -19,9 +19,9 @@ export const InvestmentCard = ({ investment, onDelete, index }: InvestmentCardPr
   const getAIRecommendation = () => {
     switch (verdict) {
       case 'unicorn':
-        return { text: 'Strong Buy Signal. Scale aggressively.', colorClass: 'text-cyber-violet' };
+        return { text: 'Strong Buy Signal. Scale aggressively.', colorClass: 'text-neon-purple' };
       case 'killer':
-        return { text: 'Critical Warning. Liquidate assets.', colorClass: 'text-cyber-red' };
+        return { text: 'Critical Warning. Liquidate assets.', colorClass: 'text-neon-red' };
       default:
         return { text: 'Hold position and monitor.', colorClass: 'text-muted-foreground' };
     }
@@ -36,15 +36,15 @@ export const InvestmentCard = ({ investment, onDelete, index }: InvestmentCardPr
       exit={{ opacity: 0, scale: 0.95 }}
       transition={{ delay: index * 0.05 }}
       whileHover={{ scale: 1.02 }}
-      className="cyber-glass p-5 hover:border-cyber-violet/50 hover:shadow-[0_0_30px_rgba(139,92,246,0.2)] transition-all duration-300 group rounded-xl"
+      className="glass-card p-5 hover:border-white/30 hover:shadow-[0_0_30px_rgba(124,58,237,0.15)] transition-all duration-300 group"
     >
       {/* Header */}
       <div className="flex items-start justify-between mb-4">
         <div>
-          <h3 className="font-command text-lg">{investment.project_name}</h3>
-          <p className="text-sm text-muted-foreground font-data">{investment.category}</p>
+          <h3 className="font-semibold text-lg">{investment.project_name}</h3>
+          <p className="text-sm text-muted-foreground">{investment.category}</p>
         </div>
-        <span className={`px-3 py-1 rounded-full text-xs font-medium font-data ${verdictInfo.className}`}>
+        <span className={`px-3 py-1 rounded-full text-xs font-medium ${verdictInfo.className}`}>
           {verdictInfo.emoji} {verdictInfo.label}
         </span>
       </div>
@@ -52,16 +52,16 @@ export const InvestmentCard = ({ investment, onDelete, index }: InvestmentCardPr
       {/* Stats Grid */}
       <div className="grid grid-cols-3 gap-4 mb-4">
         <div>
-          <p className="text-xs text-muted-foreground mb-1 font-data uppercase">Invested</p>
-          <p className="text-lg font-bold font-data">${Number(investment.cost).toLocaleString()}</p>
+          <p className="text-xs text-muted-foreground mb-1">Invested</p>
+          <p className="text-lg font-bold">${Number(investment.cost).toLocaleString()}</p>
         </div>
         <div>
-          <p className="text-xs text-muted-foreground mb-1 font-data uppercase">Revenue</p>
-          <p className="text-lg font-bold font-data">${Number(investment.revenue).toLocaleString()}</p>
+          <p className="text-xs text-muted-foreground mb-1">Revenue</p>
+          <p className="text-lg font-bold">${Number(investment.revenue).toLocaleString()}</p>
         </div>
         <div>
-          <p className="text-xs text-muted-foreground mb-1 font-data uppercase">ROI</p>
-          <p className={`text-lg font-bold font-data ${roi >= 0 ? 'text-cyber-lime' : 'text-cyber-red'}`}>
+          <p className="text-xs text-muted-foreground mb-1">ROI</p>
+          <p className={`text-lg font-bold ${roi >= 0 ? 'text-neon-green' : 'text-neon-red'}`}>
             {roi >= 0 ? '+' : ''}{roi.toFixed(1)}%
           </p>
         </div>
@@ -73,7 +73,7 @@ export const InvestmentCard = ({ investment, onDelete, index }: InvestmentCardPr
           {/* Trend */}
           <div className="flex items-center gap-1">
             <span className={trendInfo.color}>{trendInfo.emoji}</span>
-            <span className="text-xs text-muted-foreground font-data">{investment.market_trend}</span>
+            <span className="text-xs text-muted-foreground">{investment.market_trend}</span>
           </div>
           
           {/* Risk */}
@@ -81,13 +81,13 @@ export const InvestmentCard = ({ investment, onDelete, index }: InvestmentCardPr
             <div className="w-16 h-1.5 bg-secondary rounded-full overflow-hidden">
               <div
                 className={`h-full rounded-full ${
-                  investment.risk_score > 70 ? 'bg-cyber-red' :
-                  investment.risk_score > 40 ? 'bg-cyber-violet' : 'bg-cyber-lime'
+                  investment.risk_score > 70 ? 'bg-neon-red' :
+                  investment.risk_score > 40 ? 'bg-neon-amber' : 'bg-neon-green'
                 }`}
                 style={{ width: `${investment.risk_score}%` }}
               />
             </div>
-            <span className="text-xs text-muted-foreground font-data">{investment.risk_score}%</span>
+            <span className="text-xs text-muted-foreground">{investment.risk_score}%</span>
           </div>
         </div>
 
@@ -95,7 +95,7 @@ export const InvestmentCard = ({ investment, onDelete, index }: InvestmentCardPr
           variant="ghost"
           size="icon"
           onClick={() => onDelete(investment.id)}
-          className="opacity-0 group-hover:opacity-100 transition-opacity text-muted-foreground hover:text-cyber-red hover:bg-cyber-red/10"
+          className="opacity-0 group-hover:opacity-100 transition-opacity text-muted-foreground hover:text-destructive"
         >
           <Trash2 className="w-4 h-4" />
         </Button>
@@ -103,9 +103,9 @@ export const InvestmentCard = ({ investment, onDelete, index }: InvestmentCardPr
 
       {/* AI Verdict Footer */}
       <div className="mt-4 pt-3 border-t border-white/10 flex items-center gap-2">
-        <Sparkles className="w-4 h-4 text-cyber-violet" />
-        <span className="text-xs text-muted-foreground font-data">AI Verdict:</span>
-        <span className={`text-xs font-medium font-data ${aiRecommendation.colorClass}`}>
+        <Sparkles className="w-4 h-4 text-neon-purple" />
+        <span className="text-xs text-muted-foreground">AI Verdict:</span>
+        <span className={`text-xs font-medium ${aiRecommendation.colorClass}`}>
           {aiRecommendation.text}
         </span>
       </div>

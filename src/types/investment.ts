@@ -1,5 +1,5 @@
-export type Category = 'AI & Tech' | 'Crypto' | 'Real Estate' | 'Retail' | 'Stocks';
-export type MarketTrend = 'Bullish' | 'Bearish' | 'Stagnant' | 'Stable' | 'Neutral';
+export type Category = 'AI & Tech' | 'Crypto' | 'Real Estate' | 'E-commerce' | 'Stocks';
+export type MarketTrend = 'Bullish' | 'Bearish' | 'Volatile' | 'Stable' | 'Neutral';
 export type Verdict = 'unicorn' | 'gem' | 'killer' | 'gamble' | 'validated';
 
 export interface Investment {
@@ -29,7 +29,7 @@ export const getTrendFromCategory = (category: Category): MarketTrend => {
     case 'Stocks':
       return 'Bullish';
     case 'Crypto':
-      return 'Stagnant';
+      return 'Volatile';
     case 'Real Estate':
       return 'Stable';
     default:
@@ -67,9 +67,9 @@ export const verdictConfig: Record<Verdict, { emoji: string; label: string; clas
 
 // Trend config
 export const trendConfig: Record<MarketTrend, { emoji: string; color: string }> = {
-  Bullish: { emoji: '📈', color: 'text-cyber-lime' },
-  Bearish: { emoji: '📉', color: 'text-cyber-red' },
-  Stagnant: { emoji: '⚡', color: 'text-cyber-violet' },
-  Stable: { emoji: '🛡️', color: 'text-cyber-cyan' },
+  Bullish: { emoji: '📈', color: 'text-neon-green' },
+  Bearish: { emoji: '📉', color: 'text-neon-red' },
+  Volatile: { emoji: '⚡', color: 'text-neon-amber' },
+  Stable: { emoji: '🛡️', color: 'text-neon-cyan' },
   Neutral: { emoji: '➖', color: 'text-muted-foreground' },
 };
