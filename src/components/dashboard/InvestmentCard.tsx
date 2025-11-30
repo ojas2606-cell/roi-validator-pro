@@ -1,7 +1,8 @@
 import { motion } from 'framer-motion';
-import { Trash2, Sparkles } from 'lucide-react';
+import { Trash2, Sparkles, ArrowUp, ArrowDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Investment, calculateROI, getVerdict, verdictConfig, trendConfig } from '@/types/investment';
+import { useDashboard } from '@/contexts/DashboardContext';
 
 interface InvestmentCardProps {
   investment: Investment;
@@ -10,7 +11,15 @@ interface InvestmentCardProps {
 }
 
 export const InvestmentCard = ({ investment, onDelete, index }: InvestmentCardProps) => {
-  const roi = calculateROI(Number(investment.cost), Number(investment.revenue));
+  const { stressTestValue, inflationEnabled, applyStressTest, applyInflation } = useDashboard();
+  
+  // Apply adjustments
+  const baseRevenue = Number(investment.revenue);
+  const adjustedRevenue = applyInflation(applyStressTest(baseRevenue));
+  const roi = calculateROI(Number(investment.cost), adjustedRevenue);
+  
+  const isAdjusted = stressTestValue !== 0 || inflationEnabled;
+  
   const verdict = getVerdict(investment);
   const verdictInfo = verdictConfig[verdict];
   const trendInfo = trendConfig[investment.market_trend];
@@ -57,13 +66,39 @@ export const InvestmentCard = ({ investment, onDelete, index }: InvestmentCardPr
         </div>
         <div>
           <p className="text-xs text-muted-foreground mb-1">Revenue</p>
-          <p className="text-lg font-bold">${Number(investment.revenue).toLocaleString()}</p>
+          <div className="flex items-center gap-1">
+            <p className="text-lg font-bold">${adjustedRevenue.toLocaleString(undefined, { maximumFractionDigits: 0 })}</p>
+            {isAdjusted && (
+              <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }}>
+                {stressTestValue > 0 ? (
+                  <ArrowUp className="w-4 h-4 text-neon-green" />
+                ) : stressTestValue < 0 ? (
+                  <ArrowDown className="w-4 h-4 text-neon-red" />
+                ) : inflationEnabled ? (
+                  <ArrowDown className="w-4 h-4 text-neon-amber" />
+                ) : null}
+              </motion.div>
+            )}
+          </div>
         </div>
         <div>
           <p className="text-xs text-muted-foreground mb-1">ROI</p>
-          <p className={`text-lg font-bold ${roi >= 0 ? 'text-neon-green' : 'text-neon-red'}`}>
-            {roi >= 0 ? '+' : ''}{roi.toFixed(1)}%
-          </p>
+          <div className="flex items-center gap-1">
+            <p className={`text-lg font-bold ${roi >= 0 ? 'text-neon-green' : 'text-neon-red'}`}>
+              {roi >= 0 ? '+' : ''}{roi.toFixed(1)}%
+            </p>
+            {isAdjusted && (
+              <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }}>
+                {stressTestValue > 0 ? (
+                  <ArrowUp className="w-4 h-4 text-neon-green" />
+                ) : stressTestValue < 0 ? (
+                  <ArrowDown className="w-4 h-4 text-neon-red" />
+                ) : inflationEnabled ? (
+                  <ArrowDown className="w-4 h-4 text-neon-amber" />
+                ) : null}
+              </motion.div>
+            )}
+          </div>
         </div>
       </div>
 

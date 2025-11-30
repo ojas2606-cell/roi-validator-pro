@@ -1,17 +1,30 @@
 import { motion } from 'framer-motion';
-import { TrendingUp, TrendingDown, AlertTriangle, Wallet } from 'lucide-react';
+import { TrendingUp, TrendingDown, AlertTriangle, Wallet, ArrowUp, ArrowDown } from 'lucide-react';
 import { Investment, calculateROI } from '@/types/investment';
+import { useDashboard } from '@/contexts/DashboardContext';
 
 interface StatsOverviewProps {
   investments: Investment[];
 }
 
 export const StatsOverview = ({ investments }: StatsOverviewProps) => {
+  const { stressTestValue, inflationEnabled, applyStressTest, applyInflation } = useDashboard();
+  
   const totalInvested = investments.reduce((sum, inv) => sum + Number(inv.cost), 0);
-  const totalRevenue = investments.reduce((sum, inv) => sum + Number(inv.revenue), 0);
-  const totalProfit = totalRevenue - totalInvested;
+  
+  // Apply stress test and inflation to revenue
+  const baseRevenue = investments.reduce((sum, inv) => sum + Number(inv.revenue), 0);
+  const stressedRevenue = applyStressTest(baseRevenue);
+  const adjustedRevenue = applyInflation(stressedRevenue);
+  
+  const totalProfit = adjustedRevenue - totalInvested;
+  const isAdjusted = stressTestValue !== 0 || inflationEnabled;
+  
   const avgROI = investments.length > 0
-    ? investments.reduce((sum, inv) => sum + calculateROI(Number(inv.cost), Number(inv.revenue)), 0) / investments.length
+    ? investments.reduce((sum, inv) => {
+        const adjustedRev = applyInflation(applyStressTest(Number(inv.revenue)));
+        return sum + calculateROI(Number(inv.cost), adjustedRev);
+      }, 0) / investments.length
     : 0;
   const avgRisk = investments.length > 0
     ? investments.reduce((sum, inv) => sum + inv.risk_score, 0) / investments.length
@@ -31,6 +44,7 @@ export const StatsOverview = ({ investments }: StatsOverviewProps) => {
       icon: totalProfit >= 0 ? TrendingUp : TrendingDown,
       color: totalProfit >= 0 ? 'text-neon-green' : 'text-neon-red',
       bgColor: totalProfit >= 0 ? 'bg-neon-green/20' : 'bg-neon-red/20',
+      showTrend: isAdjusted,
     },
     {
       label: 'Avg. ROI',
@@ -38,6 +52,7 @@ export const StatsOverview = ({ investments }: StatsOverviewProps) => {
       icon: TrendingUp,
       color: avgROI >= 0 ? 'text-neon-green' : 'text-neon-red',
       bgColor: avgROI >= 0 ? 'bg-neon-green/20' : 'bg-neon-red/20',
+      showTrend: isAdjusted,
     },
     {
       label: 'Avg. Risk',
@@ -64,7 +79,24 @@ export const StatsOverview = ({ investments }: StatsOverviewProps) => {
             </div>
             <span className="text-sm text-muted-foreground">{stat.label}</span>
           </div>
-          <p className={`stat-number ${stat.color}`}>{stat.value}</p>
+          <div className="flex items-center gap-2">
+            <p className={`stat-number ${stat.color}`}>{stat.value}</p>
+            {stat.showTrend && (
+              <motion.div
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                className="flex items-center"
+              >
+                {stressTestValue > 0 ? (
+                  <ArrowUp className="w-5 h-5 text-neon-green" />
+                ) : stressTestValue < 0 ? (
+                  <ArrowDown className="w-5 h-5 text-neon-red" />
+                ) : inflationEnabled ? (
+                  <ArrowDown className="w-5 h-5 text-neon-amber" />
+                ) : null}
+              </motion.div>
+            )}
+          </div>
         </motion.div>
       ))}
     </div>
