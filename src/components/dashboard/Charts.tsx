@@ -13,6 +13,7 @@ import {
   Cell,
 } from 'recharts';
 import { Investment, calculateROI, Category } from '@/types/investment';
+import { useDashboard } from '@/contexts/DashboardContext';
 
 interface ChartsProps {
   investments: Investment[];
@@ -27,6 +28,8 @@ const CATEGORY_COLORS: Record<Category, string> = {
 };
 
 export const Charts = ({ investments }: ChartsProps) => {
+  const { applyStressTest, applyInflation } = useDashboard();
+  
   if (investments.length === 0) {
     return (
       <div className="glass-card p-8 text-center">
@@ -35,19 +38,26 @@ export const Charts = ({ investments }: ChartsProps) => {
     );
   }
 
-  // ROI Distribution data
-  const roiData = investments.map((inv) => ({
-    name: inv.project_name.length > 12 ? inv.project_name.slice(0, 12) + '...' : inv.project_name,
-    roi: calculateROI(Number(inv.cost), Number(inv.revenue)),
-    fill: calculateROI(Number(inv.cost), Number(inv.revenue)) >= 0 ? '#10b981' : '#ef4444',
-  }));
+  // ROI Distribution data with adjustments
+  const roiData = investments.map((inv) => {
+    const adjustedRevenue = applyInflation(applyStressTest(Number(inv.revenue)));
+    const roi = calculateROI(Number(inv.cost), adjustedRevenue);
+    return {
+      name: inv.project_name.length > 12 ? inv.project_name.slice(0, 12) + '...' : inv.project_name,
+      roi,
+      fill: roi >= 0 ? '#10b981' : '#ef4444',
+    };
+  });
 
-  // Risk vs Reward data
-  const scatterData = investments.map((inv) => ({
-    x: inv.risk_score,
-    y: Number(inv.revenue),
-    name: inv.project_name,
-  }));
+  // Risk vs Reward data with adjustments
+  const scatterData = investments.map((inv) => {
+    const adjustedRevenue = applyInflation(applyStressTest(Number(inv.revenue)));
+    return {
+      x: inv.risk_score,
+      y: adjustedRevenue,
+      name: inv.project_name,
+    };
+  });
 
   // Portfolio Allocation data
   const categoryTotals = investments.reduce((acc, inv) => {
